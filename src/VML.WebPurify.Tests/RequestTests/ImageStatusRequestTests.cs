@@ -17,7 +17,7 @@ using Xunit;
 
 #endregion
 
-namespace VML.WebPurify.Tests
+namespace VML.WebPurify.Tests.RequestTests
 {
     public class ImageStatusRequestTests
     {

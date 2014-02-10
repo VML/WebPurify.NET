@@ -54,9 +54,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImageAccountRequestTests.cs" />
-    <Compile Include="ImageCheckRequestTests.cs" />
-    <Compile Include="ImageStatusRequestTests.cs" />
+    <Compile Include="RequestTests\ImageAccountRequestTests.cs" />
+    <Compile Include="RequestTests\ImageCheckRequestTests.cs" />
+    <Compile Include="RequestTests\ImageStatusRequestTests.cs" />
+    <Compile Include="ResponseTests\ImageCheckResponseTests.cs" />
     <Compile Include="WebPurifyClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,6 +70,7 @@
       <Name>VML.WebPurify</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
