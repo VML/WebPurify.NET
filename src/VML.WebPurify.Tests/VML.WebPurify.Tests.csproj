@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageAccountRequestTests.cs" />
     <Compile Include="ImageCheckRequestTests.cs" />
     <Compile Include="ImageStatusRequestTests.cs" />
     <Compile Include="WebPurifyClientTests.cs" />
