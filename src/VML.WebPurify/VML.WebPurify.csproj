@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RestSharp">
+      <HintPath>packages\RestSharp.104.4.0\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -37,9 +40,24 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Thrower">
+      <HintPath>packages\Thrower.0.11\lib\net35-client\Thrower.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Endpoints\DefaultHttpEndpoints.cs" />
+    <Compile Include="Endpoints\DefaultHttpsEndpoints.cs" />
+    <Compile Include="Interfaces\IEndpoints.cs" />
+    <Compile Include="Requests\ApiMethod.cs" />
+    <Compile Include="Requests\ImageCheckRequest.cs" />
+    <Compile Include="Requests\ImageAccountRequest.cs" />
+    <Compile Include="Requests\ImageStatusRequest.cs" />
+    <Compile Include="Requests\RequestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebPurifyClient.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

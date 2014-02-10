@@ -36,6 +36,9 @@
     <Reference Include="NSubstitute">
       <HintPath>..\VML.WebPurify\packages\NSubstitute.1.7.1.0\lib\NET40\NSubstitute.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\VML.WebPurify\packages\RestSharp.104.4.0\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,11 +54,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="ImageCheckRequestTests.cs" />
+    <Compile Include="ImageStatusRequestTests.cs" />
+    <Compile Include="WebPurifyClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VML.WebPurify\VML.WebPurify.csproj">
+      <Project>{72844639-5ADF-49AE-848E-D9E96CE41420}</Project>
+      <Name>VML.WebPurify</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
