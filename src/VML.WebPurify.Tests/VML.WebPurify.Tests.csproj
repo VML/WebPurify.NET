@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebPurifyClientTests.data.cs" />
     <Compile Include="RequestTests\ImageAccountRequestTests.cs" />
     <Compile Include="RequestTests\ImageCheckRequestTests.cs" />
     <Compile Include="RequestTests\ImageStatusRequestTests.cs" />

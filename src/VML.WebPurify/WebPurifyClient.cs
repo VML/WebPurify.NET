@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:54 PM</created>
-//  <updated>02/10/2014 6:00 PM by Ben Ramey</updated>
+//  <updated>02/11/2014 9:49 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #define USETHROWER
@@ -57,7 +57,7 @@ namespace VML.WebPurify
 
         #region Public Methods
 
-        public void ImageAccount()
+        public ImageAccountResponse ImageAccount()
         {
             ImageAccountRequest imageAccountRequest = new ImageAccountRequest
                 {
@@ -67,7 +67,9 @@ namespace VML.WebPurify
             RestRequest request = new RestRequest(Method.GET);
             request.Parameters.AddRange(imageAccountRequest.GetParameters());
 
-            _restClient.Get(request);
+            IRestResponse<ImageAccountResponse> response = _restClient.Get<ImageAccountResponse>(request);
+            ThrowIfError(response);
+            return response.Data;
         }
 
         public ImageCheckResponse ImageCheck(Uri imageUri)
@@ -88,7 +90,7 @@ namespace VML.WebPurify
             return response.Data;
         }
 
-        public void ImageStatus(string imageId)
+        public ImageStatusResponse ImageStatus(string imageId)
         {
             Raise<ArgumentNullException>.If(string.IsNullOrWhiteSpace(imageId));
 
@@ -101,7 +103,9 @@ namespace VML.WebPurify
             RestRequest request = new RestRequest(Method.GET);
             request.Parameters.AddRange(imageStatusRequest.GetParameters());
 
-            _restClient.Get(request);
+            IRestResponse<ImageStatusResponse> response = _restClient.Get<ImageStatusResponse>(request);
+            ThrowIfError(response);
+            return response.Data;
         }
 
         #endregion

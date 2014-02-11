@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:36 PM</created>
-//  <updated>02/10/2014 6:01 PM by Ben Ramey</updated>
+//  <updated>02/11/2014 9:51 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #region Usings
@@ -23,7 +23,7 @@ using Xunit.Extensions;
 
 namespace VML.WebPurify.Tests
 {
-    public class WebPurifyClientTests
+    public partial class WebPurifyClientTests
     {
         #region Constants and Fields
 
@@ -44,6 +44,14 @@ namespace VML.WebPurify.Tests
                 .Post<ImageCheckResponse>(new RestRequest())
                 .ReturnsForAnyArgs(
                     new RestResponse<ImageCheckResponse> { StatusCode = HttpStatusCode.OK });
+            _restClientMock
+                .Get<ImageAccountResponse>(new RestRequest())
+                .ReturnsForAnyArgs(
+                    new RestResponse<ImageAccountResponse> { StatusCode = HttpStatusCode.OK });
+            _restClientMock
+                .Get<ImageStatusResponse>(new RestRequest())
+                .ReturnsForAnyArgs(
+                    new RestResponse<ImageStatusResponse> { StatusCode = HttpStatusCode.OK });
         }
 
         #endregion
@@ -65,14 +73,14 @@ namespace VML.WebPurify.Tests
         {
             _client.ImageAccount();
 
-            _restClientMock.ReceivedWithAnyArgs(1).Get(new RestRequest());
+            _restClientMock.ReceivedWithAnyArgs(1).Get<ImageAccountResponse>(new RestRequest());
         }
 
         [Fact]
         public void ImageAccount_CallsGetWithCorrectParameters()
         {
             IRestRequest request = null;
-            _restClientMock.WhenForAnyArgs(c => c.Get(new RestRequest()))
+            _restClientMock.WhenForAnyArgs(c => c.Get<ImageAccountResponse>(new RestRequest()))
                            .Do(ci => request = (IRestRequest)ci.Args()[0]);
 
             _client.ImageAccount();
@@ -85,6 +93,19 @@ namespace VML.WebPurify.Tests
 
             request.Parameters.First(p => p.Name == "api_key").Value.Should().Be("fake_apikey");
             request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.live.imgaccount");
+        }
+
+        [Theory]
+        [PropertyData("InvalidHttpStatusCodes")]
+        public void ImageAccount_ResponseHasHttpError_Throws(HttpStatusCode status)
+        {
+            _restClientMock
+                .Get<ImageAccountResponse>(new RestRequest())
+                .ReturnsForAnyArgs(
+                    new RestResponse<ImageAccountResponse> { StatusCode = status });
+
+            _client.Invoking(c => c.ImageAccount())
+                   .ShouldThrow<Exception>();
         }
 
         [Fact]
@@ -127,22 +148,7 @@ namespace VML.WebPurify.Tests
         }
 
         [Theory]
-        [InlineData(HttpStatusCode.Ambiguous)]
-        [InlineData(HttpStatusCode.BadGateway)]
-        [InlineData(HttpStatusCode.BadRequest)]
-        [InlineData(HttpStatusCode.Conflict)]
-        [InlineData(HttpStatusCode.ExpectationFailed)]
-        [InlineData(HttpStatusCode.Forbidden)]
-        [InlineData(HttpStatusCode.GatewayTimeout)]
-        [InlineData(HttpStatusCode.HttpVersionNotSupported)]
-        [InlineData(HttpStatusCode.InternalServerError)]
-        [InlineData(HttpStatusCode.MethodNotAllowed)]
-        [InlineData(HttpStatusCode.Unauthorized)]
-        [InlineData(HttpStatusCode.SeeOther)]
-        [InlineData(HttpStatusCode.RequestTimeout)]
-        [InlineData(HttpStatusCode.NotImplemented)]
-        [InlineData(HttpStatusCode.NotAcceptable)]
-        [InlineData(HttpStatusCode.NotFound)]
+        [PropertyData("InvalidHttpStatusCodes")]
         public void ImageCheck_ResponseHasHttpError_Throws(HttpStatusCode status)
         {
             Uri imageUri = new Uri("http://example.com");
@@ -160,7 +166,7 @@ namespace VML.WebPurify.Tests
         {
             _client.ImageStatus("fake_image_id");
 
-            _restClientMock.ReceivedWithAnyArgs(1).Get(new RestRequest());
+            _restClientMock.ReceivedWithAnyArgs(1).Get<ImageStatusResponse>(new RestRequest());
         }
 
         [Fact]
@@ -169,7 +175,7 @@ namespace VML.WebPurify.Tests
             string imageId = "fake_image_id";
 
             IRestRequest request = null;
-            _restClientMock.WhenForAnyArgs(c => c.Get(new RestRequest()))
+            _restClientMock.WhenForAnyArgs(c => c.Get<ImageStatusResponse>(new RestRequest()))
                            .Do(ci => request = (IRestRequest)ci.Args()[0]);
 
             _client.ImageStatus(imageId);
@@ -193,6 +199,19 @@ namespace VML.WebPurify.Tests
         public void ImageStatus_InvalidImageId_Throws(string imageId)
         {
             _client.Invoking(c => c.ImageStatus(imageId)).ShouldThrow<ArgumentNullException>();
+        }
+
+        [Theory]
+        [PropertyData("InvalidHttpStatusCodes")]
+        public void ImageStatus_ResponseHasHttpError_Throws(HttpStatusCode status)
+        {
+            _restClientMock
+                .Get<ImageStatusResponse>(new RestRequest())
+                .ReturnsForAnyArgs(
+                    new RestResponse<ImageStatusResponse> { StatusCode = status });
+
+            _client.Invoking(c => c.ImageStatus("fake image id"))
+                   .ShouldThrow<Exception>();
         }
 
         #endregion
