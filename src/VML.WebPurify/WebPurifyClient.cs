@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:54 PM</created>
-//  <updated>02/11/2014 10:07 AM by Ben Ramey</updated>
+//  <updated>02/11/2014 10:29 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #define USETHROWER
@@ -60,6 +60,10 @@ namespace VML.WebPurify
 
         #region Public Methods
 
+        /// <summary>
+        ///     Calls the 'webpurify.live.imgaccount' method.
+        /// </summary>
+        /// <returns>Response from WebPurify</returns>
         public ImageAccountResponse ImageAccount()
         {
             ImageAccountRequest imageAccountRequest = new ImageAccountRequest
@@ -76,6 +80,11 @@ namespace VML.WebPurify
             return response.Data;
         }
 
+        /// <summary>
+        ///     Calls the 'webpurify.live.imgcheck' method.
+        /// </summary>
+        /// <param name="imageUri">URI of image to send to WebPurify for moderation.</param>
+        /// <returns>Response from WebPurify</returns>
         public ImageCheckResponse ImageCheck(Uri imageUri)
         {
             Raise<ArgumentNullException>.IfIsNull(imageUri);
@@ -95,6 +104,11 @@ namespace VML.WebPurify
             return response.Data;
         }
 
+        /// <summary>
+        ///     Calls the 'webpurify.live.imgstatus' method.
+        /// </summary>
+        /// <param name="imageId">ID of image returned to you from a previous ImageCheck call.</param>
+        /// <returns>Response from WebPurify</returns>
         public ImageStatusResponse ImageStatus(string imageId)
         {
             Raise<ArgumentNullException>.If(string.IsNullOrWhiteSpace(imageId));
