@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:54 PM</created>
-//  <updated>02/10/2014 5:06 PM by Ben Ramey</updated>
+//  <updated>02/10/2014 6:00 PM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #define USETHROWER
@@ -12,10 +12,12 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using RestSharp;
 using Thrower;
 using VML.WebPurify.Interfaces;
 using VML.WebPurify.Requests;
+using VML.WebPurify.Responses;
 
 #endregion
 
@@ -68,7 +70,7 @@ namespace VML.WebPurify
             _restClient.Get(request);
         }
 
-        public void ImageCheck(Uri imageUri)
+        public ImageCheckResponse ImageCheck(Uri imageUri)
         {
             Raise<ArgumentNullException>.IfIsNull(imageUri);
 
@@ -81,7 +83,9 @@ namespace VML.WebPurify
             RestRequest request = new RestRequest(Method.POST);
             request.Parameters.AddRange(imageCheckRequest.GetParameters());
 
-            _restClient.Post(request);
+            IRestResponse<ImageCheckResponse> response = _restClient.Post<ImageCheckResponse>(request);
+            ThrowIfError(response);
+            return response.Data;
         }
 
         public void ImageStatus(string imageId)
@@ -98,6 +102,15 @@ namespace VML.WebPurify
             request.Parameters.AddRange(imageStatusRequest.GetParameters());
 
             _restClient.Get(request);
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void ThrowIfError(IRestResponse response)
+        {
+            Raise<Exception>.If(response.StatusCode != HttpStatusCode.OK, "API response was not OK.");
         }
 
         #endregion
