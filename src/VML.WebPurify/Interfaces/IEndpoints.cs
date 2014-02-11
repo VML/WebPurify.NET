@@ -2,8 +2,8 @@
 //  <copyright file="IEndpoints.cs" company="VML">
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
-//  <created>02/10/2014 3:52 PM</created>
-//  <updated>02/10/2014 4:19 PM by Ben Ramey</updated>
+//  <created>02/11/2014 10:26 AM</created>
+//  <updated>02/11/2014 10:42 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #region Usings

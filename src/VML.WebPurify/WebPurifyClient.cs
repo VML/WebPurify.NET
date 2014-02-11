@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:54 PM</created>
-//  <updated>02/11/2014 10:29 AM by Ben Ramey</updated>
+//  <updated>02/11/2014 10:48 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #define USETHROWER
@@ -31,27 +31,34 @@ namespace VML.WebPurify
         private readonly string _apiKey;
         private readonly IEndpoints _endpoints;
         private readonly IRestClient _restClient;
+        private readonly bool _sandbox;
 
         #endregion
 
         #region Constructors and Destructors
 
         public WebPurifyClient(IEndpoints endpoints, string apiKey)
+            : this(endpoints, apiKey, false)
+        {
+        }
+
+        public WebPurifyClient(IEndpoints endpoints, string apiKey, bool sandbox)
         {
             Raise<ArgumentException>.If(string.IsNullOrWhiteSpace(apiKey));
 
+            _sandbox = sandbox;
             _restClient = new RestClient();
             _apiKey = apiKey;
             _endpoints = endpoints ?? new DefaultHttpsEndpoints();
         }
 
         public WebPurifyClient(string apiKey)
-            : this(null, apiKey)
+            : this(null, apiKey, false)
         {
         }
 
-        public WebPurifyClient(string apiKey, IRestClient restClient, IEndpoints endpoints)
-            : this(endpoints, apiKey)
+        public WebPurifyClient(string apiKey, IRestClient restClient, IEndpoints endpoints, bool sandbox)
+            : this(endpoints, apiKey, sandbox)
         {
             _restClient = restClient;
         }
@@ -66,9 +73,12 @@ namespace VML.WebPurify
         /// <returns>Response from WebPurify</returns>
         public ImageAccountResponse ImageAccount()
         {
+            this.Log().Debug("Image account call");
+
             ImageAccountRequest imageAccountRequest = new ImageAccountRequest
                 {
-                    ApiKey = _apiKey
+                    ApiKey = _apiKey,
+                    IsSandbox = _sandbox
                 };
 
             _restClient.BaseUrl = _endpoints.ImageModerationEndpoint.ToString();
@@ -87,12 +97,15 @@ namespace VML.WebPurify
         /// <returns>Response from WebPurify</returns>
         public ImageCheckResponse ImageCheck(Uri imageUri)
         {
+            this.Log().Debug("Image check call for image: {0}", imageUri);
+
             Raise<ArgumentNullException>.IfIsNull(imageUri);
 
             ImageCheckRequest imageCheckRequest = new ImageCheckRequest
                 {
                     ApiKey = _apiKey,
-                    ImageUri = imageUri
+                    ImageUri = imageUri,
+                    IsSandbox = _sandbox
                 };
 
             _restClient.BaseUrl = _endpoints.ImageModerationEndpoint.ToString();
@@ -111,12 +124,15 @@ namespace VML.WebPurify
         /// <returns>Response from WebPurify</returns>
         public ImageStatusResponse ImageStatus(string imageId)
         {
+            this.Log().Debug("Image status call for ID: {0}", imageId);
+
             Raise<ArgumentNullException>.If(string.IsNullOrWhiteSpace(imageId));
 
             ImageStatusRequest imageStatusRequest = new ImageStatusRequest
                 {
                     ApiKey = _apiKey,
-                    ImageId = imageId
+                    ImageId = imageId,
+                    IsSandbox = _sandbox
                 };
 
             _restClient.BaseUrl = _endpoints.ImageModerationEndpoint.ToString();
@@ -134,6 +150,15 @@ namespace VML.WebPurify
 
         private void ThrowIfError(IRestResponse response)
         {
+            if (response.ErrorException != null)
+            {
+                this.Log().Error(() => "Response exception", response.ErrorException);
+            }
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                this.Log().Error("Response error: {0}", response.ErrorMessage);
+            }
+
             Raise<Exception>.If(response.StatusCode != HttpStatusCode.OK, "API response was not OK.");
         }
 

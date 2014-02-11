@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:36 PM</created>
-//  <updated>02/11/2014 10:14 AM by Ben Ramey</updated>
+//  <updated>02/11/2014 10:46 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #region Usings
@@ -37,7 +37,7 @@ namespace VML.WebPurify.Tests
         public WebPurifyClientTests()
         {
             _restClientMock = Substitute.For<IRestClient>();
-            _client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints());
+            _client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints(), false);
 
             _restClientMock
                 .Post<ImageCheckResponse>(new RestRequest())
@@ -98,7 +98,7 @@ namespace VML.WebPurify.Tests
         public void ImageAccount_CustomEndpoints_UsesEndpointUrls()
         {
             var endpoints = new FakeEndpoints();
-            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints);
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints, false);
             var response = client.ImageAccount();
 
             _restClientMock.BaseUrl.Should().Be(endpoints.ImageModerationEndpoint.ToString());
@@ -107,7 +107,7 @@ namespace VML.WebPurify.Tests
         [Fact]
         public void ImageAccount_DefaultHttpsEndpoints_UsesEndpointUrls()
         {
-            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints());
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints(), false);
             var response = client.ImageAccount();
 
             _restClientMock.BaseUrl.Should().Be(new DefaultHttpsEndpoints().ImageModerationEndpoint.ToString());
@@ -124,6 +124,19 @@ namespace VML.WebPurify.Tests
 
             _client.Invoking(c => c.ImageAccount())
                    .ShouldThrow<Exception>();
+        }
+
+        [Fact]
+        public void ImageAccount_Sandbox_UsesSandboxMethod()
+        {
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints(), true);
+            IRestRequest request = null;
+            _restClientMock.WhenForAnyArgs(c => c.Get<ImageAccountResponse>(new RestRequest()))
+                           .Do(ci => request = (IRestRequest)ci.Args()[0]);
+
+            client.ImageAccount();
+
+            request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.sandbox.imgaccount");
         }
 
         [Fact]
@@ -163,7 +176,7 @@ namespace VML.WebPurify.Tests
         public void ImageCheck_CustomEndpoints_UsesEndpointUrls()
         {
             var endpoints = new FakeEndpoints();
-            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints);
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints, false);
             var response = client.ImageCheck(new Uri("http://example.com"));
 
             _restClientMock.BaseUrl.Should().Be(endpoints.ImageModerationEndpoint.ToString());
@@ -172,7 +185,7 @@ namespace VML.WebPurify.Tests
         [Fact]
         public void ImageCheck_DefaultHttpsEndpoints_UsesEndpointUrls()
         {
-            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints());
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints(), false);
             var response = client.ImageCheck(new Uri("http://example.com"));
 
             _restClientMock.BaseUrl.Should().Be(new DefaultHttpsEndpoints().ImageModerationEndpoint.ToString());
@@ -196,6 +209,19 @@ namespace VML.WebPurify.Tests
 
             _client.Invoking(c => c.ImageCheck(imageUri))
                    .ShouldThrow<Exception>();
+        }
+
+        [Fact]
+        public void ImageCheck_Sandbox_UsesSandboxMethod()
+        {
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints(), true);
+            IRestRequest request = null;
+            _restClientMock.WhenForAnyArgs(c => c.Get<ImageCheckResponse>(new RestRequest()))
+                           .Do(ci => request = (IRestRequest)ci.Args()[0]);
+
+            client.ImageCheck(new Uri("http://example.com"));
+
+            request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.sandbox.imgcheck");
         }
 
         [Fact]
@@ -233,7 +259,7 @@ namespace VML.WebPurify.Tests
         public void ImageStatus_CustomEndpoints_UsesEndpointUrls()
         {
             var endpoints = new FakeEndpoints();
-            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints);
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints, false);
             var response = client.ImageStatus("blah");
 
             _restClientMock.BaseUrl.Should().Be(endpoints.ImageModerationEndpoint.ToString());
@@ -242,7 +268,7 @@ namespace VML.WebPurify.Tests
         [Fact]
         public void ImageStatus_DefaultHttpsEndpoints_UsesEndpointUrls()
         {
-            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints());
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints(), false);
             var response = client.ImageStatus("blah");
 
             _restClientMock.BaseUrl.Should().Be(new DefaultHttpsEndpoints().ImageModerationEndpoint.ToString());
@@ -268,6 +294,19 @@ namespace VML.WebPurify.Tests
 
             _client.Invoking(c => c.ImageStatus("fake image id"))
                    .ShouldThrow<Exception>();
+        }
+
+        [Fact]
+        public void ImageStatus_Sandbox_UsesSandboxMethod()
+        {
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints(), true);
+            IRestRequest request = null;
+            _restClientMock.WhenForAnyArgs(c => c.Get<ImageStatusResponse>(new RestRequest()))
+                           .Do(ci => request = (IRestRequest)ci.Args()[0]);
+
+            client.ImageStatus("fake_image_id");
+
+            request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.sandbox.imgstatus");
         }
 
         #endregion
