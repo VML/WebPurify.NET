@@ -54,6 +54,7 @@
     <Compile Include="Requests\ImageStatusRequest.cs" />
     <Compile Include="Requests\RequestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\ImageAccountResponse.cs" />
     <Compile Include="Responses\ImageResponseBase.cs" />
     <Compile Include="Responses\ResponseBase.cs" />
     <Compile Include="Responses\ImageStatus.cs" />

@@ -21,17 +21,13 @@ namespace VML.WebPurify.Responses
     {
         #region Public Properties
 
-        [SerializeAs(Name = "api_key")]
         [DeserializeAs(Name = "api_key")]
         public string ApiKey { get; set; }
 
-        [SerializeAs(Name = "format")]
         public string Format { get; set; }
 
-        [SerializeAs(Name = "method")]
         public string Method { get; set; }
 
-        [SerializeAs(Name = "stat", Attribute = true)]
         [DeserializeAs(Name = "stat", Attribute = true)]
         public string ResponseStatus { get; set; }
 

@@ -1,8 +1,8 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-//  <copyright file="ImageResponseBase.cs" company="VML">
+//  <copyright file="ImageAccountResponse.cs" company="VML">
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
-//  <created>02/11/2014 9:31 AM</created>
+//  <created>02/11/2014 9:38 AM</created>
 //  <updated>02/11/2014 9:39 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -10,20 +10,18 @@
 
 using System;
 using System.Linq;
-using RestSharp.Deserializers;
+using RestSharp.Serializers;
 
 #endregion
 
 namespace VML.WebPurify.Responses
 {
-    public abstract class ImageResponseBase : ResponseBase
+    [SerializeAs(Name = "rsp")]
+    public class ImageAccountResponse : ResponseBase
     {
         #region Public Properties
 
-        [DeserializeAs(Name = "imgid")]
-        public string ImageId { get; set; }
-
-        public ImageStatus Status { get; set; }
+        public int Remaining { get; set; }
 
         #endregion
     }
