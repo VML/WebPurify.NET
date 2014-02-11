@@ -42,7 +42,7 @@ namespace VML.WebPurify.Requests
             return baseParams.Union(
                 new[]
                     {
-                        new Parameter { Name = "imgurl", Value = ImageUri.ToString() }
+                        new Parameter { Name = "imgurl", Value = ImageUri.ToString(), Type = ParameterType.QueryString }
                     }).ToArray();
         }
 

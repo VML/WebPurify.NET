@@ -42,15 +42,15 @@ namespace VML.WebPurify.Tests
             _restClientMock
                 .Post<ImageCheckResponse>(new RestRequest())
                 .ReturnsForAnyArgs(
-                    new RestResponse<ImageCheckResponse> { StatusCode = HttpStatusCode.OK });
+                    new RestResponse<ImageCheckResponse> { StatusCode = HttpStatusCode.OK, Data = new ImageCheckResponse() });
             _restClientMock
                 .Get<ImageAccountResponse>(new RestRequest())
                 .ReturnsForAnyArgs(
-                    new RestResponse<ImageAccountResponse> { StatusCode = HttpStatusCode.OK });
+                    new RestResponse<ImageAccountResponse> { StatusCode = HttpStatusCode.OK, Data = new ImageAccountResponse() });
             _restClientMock
                 .Get<ImageStatusResponse>(new RestRequest())
                 .ReturnsForAnyArgs(
-                    new RestResponse<ImageStatusResponse> { StatusCode = HttpStatusCode.OK });
+                    new RestResponse<ImageStatusResponse> { StatusCode = HttpStatusCode.OK, Data = new ImageStatusResponse() });
         }
 
         #endregion
@@ -92,6 +92,9 @@ namespace VML.WebPurify.Tests
 
             request.Parameters.First(p => p.Name == "api_key").Value.Should().Be("fake_apikey");
             request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.live.imgaccount");
+
+            request.Parameters.First(p => p.Name == "api_key").Type.Should().Be(ParameterType.QueryString);
+            request.Parameters.First(p => p.Name == "method").Type.Should().Be(ParameterType.QueryString);
         }
 
         [Fact]
@@ -170,6 +173,10 @@ namespace VML.WebPurify.Tests
             request.Parameters.First(p => p.Name == "api_key").Value.Should().Be("fake_apikey");
             request.Parameters.First(p => p.Name == "imgurl").Value.Should().Be(imageUri.ToString());
             request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.live.imgcheck");
+
+            request.Parameters.First(p => p.Name == "api_key").Type.Should().Be(ParameterType.QueryString);
+            request.Parameters.First(p => p.Name == "imgurl").Type.Should().Be(ParameterType.QueryString);
+            request.Parameters.First(p => p.Name == "method").Type.Should().Be(ParameterType.QueryString);
         }
 
         [Fact]
@@ -253,6 +260,10 @@ namespace VML.WebPurify.Tests
             request.Parameters.First(p => p.Name == "api_key").Value.Should().Be("fake_apikey");
             request.Parameters.First(p => p.Name == "imgid").Value.Should().Be(imageId);
             request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.live.imgstatus");
+
+            request.Parameters.First(p => p.Name == "api_key").Type.Should().Be(ParameterType.QueryString);
+            request.Parameters.First(p => p.Name == "imgid").Type.Should().Be(ParameterType.QueryString);
+            request.Parameters.First(p => p.Name == "method").Type.Should().Be(ParameterType.QueryString);
         }
 
         [Fact]

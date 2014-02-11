@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:54 PM</created>
-//  <updated>02/11/2014 10:48 AM by Ben Ramey</updated>
+//  <updated>02/11/2014 11:47 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #define USETHROWER
@@ -14,6 +14,7 @@ using System;
 using System.Linq;
 using System.Net;
 using RestSharp;
+using RestSharp.Deserializers;
 using Thrower;
 using VML.WebPurify.Endpoints;
 using VML.WebPurify.Interfaces;
@@ -50,10 +51,18 @@ namespace VML.WebPurify
             _restClient = new RestClient();
             _apiKey = apiKey;
             _endpoints = endpoints ?? new DefaultHttpsEndpoints();
+
+            (_restClient as RestClient).AddHandler("application/xml", new XmlAttributeDeserializer());
+            (_restClient as RestClient).AddHandler("text/xml", new XmlAttributeDeserializer());
         }
 
         public WebPurifyClient(string apiKey)
             : this(null, apiKey, false)
+        {
+        }
+
+        public WebPurifyClient(string apiKey, bool sandbox)
+            : this(null, apiKey, sandbox)
         {
         }
 
@@ -148,7 +157,7 @@ namespace VML.WebPurify
 
         #region Methods
 
-        private void ThrowIfError(IRestResponse response)
+        private void ThrowIfError<T>(IRestResponse<T> response) where T : ResponseBase
         {
             if (response.ErrorException != null)
             {
@@ -160,6 +169,18 @@ namespace VML.WebPurify
             }
 
             Raise<Exception>.If(response.StatusCode != HttpStatusCode.OK, "API response was not OK.");
+            Raise<Exception>.IfIsNull(response.Data, "No data returned.");
+
+            if (response.Data.ResponseStatus == "fail")
+            {
+                string message = response.Data.Error != null
+                                     ? string.Format("{0}: {1}", response.Data.Error.Code, response.Data.Error.Message)
+                                     : "An unknown error occurred.";
+
+                this.Log().Error(message);
+
+                throw new Exception(message);
+            }
         }
 
         #endregion

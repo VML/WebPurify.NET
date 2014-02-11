@@ -2,8 +2,8 @@
 //  <copyright file="RequestBase.cs" company="VML">
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
-//  <created>02/10/2014 3:52 PM</created>
-//  <updated>02/10/2014 4:19 PM by Ben Ramey</updated>
+//  <created>02/11/2014 10:26 AM</created>
+//  <updated>02/11/2014 11:46 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #region Usings
@@ -49,8 +49,8 @@ namespace VML.WebPurify.Requests
         {
             return new[]
                 {
-                    new Parameter { Name = "api_key", Value = ApiKey },
-                    new Parameter { Name = "method", Value = GetMethod() },
+                    new Parameter { Name = "api_key", Value = ApiKey, Type = ParameterType.QueryString },
+                    new Parameter { Name = "method", Value = GetMethod(), Type = ParameterType.QueryString },
                 };
         }
 
