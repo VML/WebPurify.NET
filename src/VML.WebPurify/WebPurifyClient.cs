@@ -24,7 +24,7 @@ using VML.WebPurify.Responses;
 
 namespace VML.WebPurify
 {
-    public class WebPurifyClient
+    public class WebPurifyClient : IWebPurifyClient
     {
         #region Constants and Fields
 

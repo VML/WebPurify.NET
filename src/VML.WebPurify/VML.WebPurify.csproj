@@ -51,6 +51,7 @@
     <Compile Include="Endpoints\DefaultHttpEndpoints.cs" />
     <Compile Include="Endpoints\DefaultHttpsEndpoints.cs" />
     <Compile Include="Interfaces\IEndpoints.cs" />
+    <Compile Include="Interfaces\IWebPurifyClient.cs" />
     <Compile Include="LogExtensions.cs" />
     <Compile Include="Requests\ApiMethod.cs" />
     <Compile Include="Requests\ImageCheckRequest.cs" />
@@ -68,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="VML.WebPurify.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
