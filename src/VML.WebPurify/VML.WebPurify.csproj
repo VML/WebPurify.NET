@@ -54,6 +54,10 @@
     <Compile Include="Requests\ImageStatusRequest.cs" />
     <Compile Include="Requests\RequestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\ImageResponseBase.cs" />
+    <Compile Include="Responses\ResponseBase.cs" />
+    <Compile Include="Responses\ImageStatus.cs" />
+    <Compile Include="Responses\ImageStatusResponse.cs" />
     <Compile Include="Responses\ImageCheckResponse.cs" />
     <Compile Include="WebPurifyClient.cs" />
   </ItemGroup>

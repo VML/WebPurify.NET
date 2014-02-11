@@ -57,6 +57,7 @@
     <Compile Include="RequestTests\ImageAccountRequestTests.cs" />
     <Compile Include="RequestTests\ImageCheckRequestTests.cs" />
     <Compile Include="RequestTests\ImageStatusRequestTests.cs" />
+    <Compile Include="ResponseTests\ImageStatusResponseTests.cs" />
     <Compile Include="ResponseTests\ImageCheckResponseTests.cs" />
     <Compile Include="WebPurifyClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

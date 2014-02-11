@@ -20,12 +20,12 @@ using Xunit;
 
 namespace VML.WebPurify.Tests.ResponseTests
 {
-    public class ImageCheckResponseTests
+    public class ImageStatusResponseTests
     {
         #region Constants and Fields
 
         private const string SampleXml =
-            @"<rsp stat=""ok""><imgid>7de93bc200ff21a26da6ddb115506e82</imgid><status>pending</status><api_key>f3412a9614845dc17d97a5d51a647a13</api_key><format>rest</format><method>webpurify.live.imgcheck</method></rsp>";
+            @"<rsp stat=""ok""><method>webpurify.live.imgstatus</method><format>rest</format><imgid>7de93bc200ff21a26da6ddb115506e82</imgid><sdate>2010-11-26 00:02:39</sdate><mdate>2010-11-26 00:03:01</mdate><status>approved</status><api_key>f3412a9614845dc17d97a5d51a647a13</api_key></rsp>";
 
         #endregion
 
@@ -36,14 +36,16 @@ namespace VML.WebPurify.Tests.ResponseTests
         {
             RestResponse response = new RestResponse { Content = SampleXml };
             XmlAttributeDeserializer deserializer = new XmlAttributeDeserializer();
-            var imageCheckResponse = deserializer.Deserialize<ImageCheckResponse>(response);
+            var imageStatusResponse = deserializer.Deserialize<ImageStatusResponse>(response);
 
-            imageCheckResponse.Method.Should().Be("webpurify.live.imgcheck");
-            imageCheckResponse.Format.Should().Be("rest");
-            imageCheckResponse.ImageId.Should().Be("7de93bc200ff21a26da6ddb115506e82");
-            imageCheckResponse.Status.Should().Be(ImageStatus.Pending);
-            imageCheckResponse.ApiKey.Should().Be("f3412a9614845dc17d97a5d51a647a13");
-            imageCheckResponse.ResponseStatus.Should().Be("ok");
+            imageStatusResponse.Method.Should().Be("webpurify.live.imgstatus");
+            imageStatusResponse.Format.Should().Be("rest");
+            imageStatusResponse.ImageId.Should().Be("7de93bc200ff21a26da6ddb115506e82");
+            imageStatusResponse.Status.Should().Be(ImageStatus.Approved);
+            imageStatusResponse.ApiKey.Should().Be("f3412a9614845dc17d97a5d51a647a13");
+            imageStatusResponse.SDate.Should().Be(DateTime.Parse("2010-11-26 00:02:39"));
+            imageStatusResponse.MDate.Should().Be(DateTime.Parse("2010-11-26 00:03:01"));
+            imageStatusResponse.ResponseStatus.Should().Be("ok");
         }
 
         #endregion
