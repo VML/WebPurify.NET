@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:36 PM</created>
-//  <updated>02/11/2014 9:51 AM by Ben Ramey</updated>
+//  <updated>02/11/2014 10:14 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #region Usings
@@ -37,9 +37,8 @@ namespace VML.WebPurify.Tests
         public WebPurifyClientTests()
         {
             _restClientMock = Substitute.For<IRestClient>();
-            _client = new WebPurifyClient("fake_apikey", _restClientMock);
+            _client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints());
 
-            _restClientMock.BaseUrl.Returns("http://example.com");
             _restClientMock
                 .Post<ImageCheckResponse>(new RestRequest())
                 .ReturnsForAnyArgs(
@@ -95,6 +94,25 @@ namespace VML.WebPurify.Tests
             request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.live.imgaccount");
         }
 
+        [Fact]
+        public void ImageAccount_CustomEndpoints_UsesEndpointUrls()
+        {
+            var endpoints = new FakeEndpoints();
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints);
+            var response = client.ImageAccount();
+
+            _restClientMock.BaseUrl.Should().Be(endpoints.ImageModerationEndpoint.ToString());
+        }
+
+        [Fact]
+        public void ImageAccount_DefaultHttpsEndpoints_UsesEndpointUrls()
+        {
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints());
+            var response = client.ImageAccount();
+
+            _restClientMock.BaseUrl.Should().Be(new DefaultHttpsEndpoints().ImageModerationEndpoint.ToString());
+        }
+
         [Theory]
         [PropertyData("InvalidHttpStatusCodes")]
         public void ImageAccount_ResponseHasHttpError_Throws(HttpStatusCode status)
@@ -139,6 +157,25 @@ namespace VML.WebPurify.Tests
             request.Parameters.First(p => p.Name == "api_key").Value.Should().Be("fake_apikey");
             request.Parameters.First(p => p.Name == "imgurl").Value.Should().Be(imageUri.ToString());
             request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.live.imgcheck");
+        }
+
+        [Fact]
+        public void ImageCheck_CustomEndpoints_UsesEndpointUrls()
+        {
+            var endpoints = new FakeEndpoints();
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints);
+            var response = client.ImageCheck(new Uri("http://example.com"));
+
+            _restClientMock.BaseUrl.Should().Be(endpoints.ImageModerationEndpoint.ToString());
+        }
+
+        [Fact]
+        public void ImageCheck_DefaultHttpsEndpoints_UsesEndpointUrls()
+        {
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints());
+            var response = client.ImageCheck(new Uri("http://example.com"));
+
+            _restClientMock.BaseUrl.Should().Be(new DefaultHttpsEndpoints().ImageModerationEndpoint.ToString());
         }
 
         [Fact]
@@ -190,6 +227,25 @@ namespace VML.WebPurify.Tests
             request.Parameters.First(p => p.Name == "api_key").Value.Should().Be("fake_apikey");
             request.Parameters.First(p => p.Name == "imgid").Value.Should().Be(imageId);
             request.Parameters.First(p => p.Name == "method").Value.Should().Be("webpurify.live.imgstatus");
+        }
+
+        [Fact]
+        public void ImageStatus_CustomEndpoints_UsesEndpointUrls()
+        {
+            var endpoints = new FakeEndpoints();
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, endpoints);
+            var response = client.ImageStatus("blah");
+
+            _restClientMock.BaseUrl.Should().Be(endpoints.ImageModerationEndpoint.ToString());
+        }
+
+        [Fact]
+        public void ImageStatus_DefaultHttpsEndpoints_UsesEndpointUrls()
+        {
+            var client = new WebPurifyClient("fake_apikey", _restClientMock, new DefaultHttpsEndpoints());
+            var response = client.ImageStatus("blah");
+
+            _restClientMock.BaseUrl.Should().Be(new DefaultHttpsEndpoints().ImageModerationEndpoint.ToString());
         }
 
         [Theory]

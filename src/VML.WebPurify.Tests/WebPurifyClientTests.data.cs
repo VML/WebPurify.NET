@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/11/2014 9:41 AM</created>
-//  <updated>02/11/2014 9:43 AM by Ben Ramey</updated>
+//  <updated>02/11/2014 10:11 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #region Usings
@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using VML.WebPurify.Interfaces;
 
 #endregion
 
@@ -48,5 +49,20 @@ namespace VML.WebPurify.Tests
         }
 
         #endregion
+
+        private class FakeEndpoints : IEndpoints
+        {
+            #region Public Properties
+
+            public Uri ImageModerationEndpoint
+            {
+                get
+                {
+                    return new Uri("http://example.com");
+                }
+            }
+
+            #endregion
+        }
     }
 }

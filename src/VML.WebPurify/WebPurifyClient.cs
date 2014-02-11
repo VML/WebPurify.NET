@@ -3,7 +3,7 @@
 //   Copyright VML 2014. All rights reserved.
 //  </copyright>
 //  <created>02/10/2014 3:54 PM</created>
-//  <updated>02/11/2014 9:49 AM by Ben Ramey</updated>
+//  <updated>02/11/2014 10:07 AM by Ben Ramey</updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 #define USETHROWER
@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net;
 using RestSharp;
 using Thrower;
+using VML.WebPurify.Endpoints;
 using VML.WebPurify.Interfaces;
 using VML.WebPurify.Requests;
 using VML.WebPurify.Responses;
@@ -28,6 +29,7 @@ namespace VML.WebPurify
         #region Constants and Fields
 
         private readonly string _apiKey;
+        private readonly IEndpoints _endpoints;
         private readonly IRestClient _restClient;
 
         #endregion
@@ -40,6 +42,7 @@ namespace VML.WebPurify
 
             _restClient = new RestClient();
             _apiKey = apiKey;
+            _endpoints = endpoints ?? new DefaultHttpsEndpoints();
         }
 
         public WebPurifyClient(string apiKey)
@@ -47,8 +50,8 @@ namespace VML.WebPurify
         {
         }
 
-        public WebPurifyClient(string apiKey, IRestClient restClient)
-            : this(null, apiKey)
+        public WebPurifyClient(string apiKey, IRestClient restClient, IEndpoints endpoints)
+            : this(endpoints, apiKey)
         {
             _restClient = restClient;
         }
@@ -64,6 +67,7 @@ namespace VML.WebPurify
                     ApiKey = _apiKey
                 };
 
+            _restClient.BaseUrl = _endpoints.ImageModerationEndpoint.ToString();
             RestRequest request = new RestRequest(Method.GET);
             request.Parameters.AddRange(imageAccountRequest.GetParameters());
 
@@ -82,6 +86,7 @@ namespace VML.WebPurify
                     ImageUri = imageUri
                 };
 
+            _restClient.BaseUrl = _endpoints.ImageModerationEndpoint.ToString();
             RestRequest request = new RestRequest(Method.POST);
             request.Parameters.AddRange(imageCheckRequest.GetParameters());
 
@@ -100,6 +105,7 @@ namespace VML.WebPurify
                     ImageId = imageId
                 };
 
+            _restClient.BaseUrl = _endpoints.ImageModerationEndpoint.ToString();
             RestRequest request = new RestRequest(Method.GET);
             request.Parameters.AddRange(imageStatusRequest.GetParameters());
 
